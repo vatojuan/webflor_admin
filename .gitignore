@@ -1,0 +1,15 @@
+# Node.js
+node_modules/
+
+# Logs de npm y Yarn
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Archivos de compilación de Next.js
+.next/
+out/
+
+# Variables de entorno
+.env
+.env.local
