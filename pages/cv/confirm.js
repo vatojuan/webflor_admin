@@ -11,7 +11,7 @@ export default function ConfirmEmail() {
   useEffect(() => {
     if (code) {
       axios
-        .get(`http://127.0.0.1:8000/cv/confirm?code=${code}`)
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/cv/confirm?code=${code}`)
         .then((response) => {
           setMessage("✅ ¡Cuenta confirmada exitosamente!");
           setTimeout(() => {

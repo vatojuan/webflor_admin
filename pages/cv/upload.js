@@ -41,9 +41,12 @@ export default function UploadCV() {
     setUploading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://127.0.0.1:8000/cv/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/cv/upload`, 
+        formData, 
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      
       setMessage(res.data.message || "CV procesado exitosamente.");
       if (res.data.extracted_text) {
         setExtractedText(res.data.extracted_text);
