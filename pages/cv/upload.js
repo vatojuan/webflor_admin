@@ -36,7 +36,7 @@ export default function UploadCV() {
     }
     const formData = new FormData();
     formData.append("file", file);
-    if (email) formData.append("email", email);
+    if (email) formData.append("email", email.toLowerCase());
 
     setUploading(true);
     setMessage("");
