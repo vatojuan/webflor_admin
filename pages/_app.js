@@ -76,11 +76,25 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
     [mode]
   );
 
-  // Lista de rutas donde no necesitas la autenticación
-  const noAuthNeeded = ["/cv/upload", "/cv/confirm"];
+  // Excluir todas las rutas que comiencen con "/cv/"
+  if (router.pathname.startsWith("/cv/")) {
+    return (
+      <>
+        <Head>
+          <link rel="icon" href="/favicon.ico" />
+          <title>FAP Mendoza</title>
+        </Head>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Component {...pageProps} toggleDarkMode={toggleDarkMode} currentMode={mode} />
+        </ThemeProvider>
+      </>
+    );
+  }
 
-  const content = (
-    <>
+  // En el resto de las páginas, se utiliza SessionProvider
+  return (
+    <SessionProvider session={session}>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>FAP Mendoza</title>
@@ -89,14 +103,6 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         <CssBaseline />
         <Component {...pageProps} toggleDarkMode={toggleDarkMode} currentMode={mode} />
       </ThemeProvider>
-    </>
+    </SessionProvider>
   );
-
-  // Si la ruta actual está en la lista, no envolvemos con SessionProvider
-  if (noAuthNeeded.includes(router.pathname)) {
-    return content;
-  }
-
-  // En el resto de las páginas, se utiliza SessionProvider
-  return <SessionProvider session={session}>{content}</SessionProvider>;
 }
