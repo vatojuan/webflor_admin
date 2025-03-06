@@ -56,45 +56,17 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         },
         typography: {
           fontFamily: "'Bodoni Moda', serif",
-          h1: {
-            fontWeight: 700,
-            fontSize: "2.4rem",
-          },
-          h2: {
-            fontWeight: 600,
-            fontSize: "2rem",
-          },
-          h6: {
-            fontWeight: 500,
-          },
-          body1: {
-            fontSize: "1rem",
-            lineHeight: 1.6,
-          },
+          h1: { fontWeight: 700, fontSize: "2.4rem" },
+          h2: { fontWeight: 600, fontSize: "2rem" },
+          h6: { fontWeight: 500 },
+          body1: { fontSize: "1rem", lineHeight: 1.6 },
         },
       }),
     [mode]
   );
 
-  // Excluir todas las rutas que comiencen con "/cv/"
-  if (router.pathname.startsWith("/cv/")) {
-    return (
-      <>
-        <Head>
-          <link rel="icon" href="/favicon.ico" />
-          <title>FAP Mendoza</title>
-        </Head>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Component {...pageProps} toggleDarkMode={toggleDarkMode} currentMode={mode} />
-        </ThemeProvider>
-      </>
-    );
-  }
-
-  // En el resto de las páginas, se utiliza SessionProvider
-  return (
-    <SessionProvider session={session}>
+  const content = (
+    <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>FAP Mendoza</title>
@@ -103,6 +75,21 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         <CssBaseline />
         <Component {...pageProps} toggleDarkMode={toggleDarkMode} currentMode={mode} />
       </ThemeProvider>
+    </>
+  );
+
+  // Espera a que el router esté listo
+  if (!router.isReady) return null;
+
+  // Si la ruta empieza con "/cv", no envolver con SessionProvider
+  if (router.pathname.startsWith("/cv")) {
+    return content;
+  }
+
+  // Para el resto, envolver con SessionProvider y desactivar el refetch automático
+  return (
+    <SessionProvider session={session} refetchInterval={0} refetchOnWindowFocus={false}>
+      {content}
     </SessionProvider>
   );
 }
