@@ -5,8 +5,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { SessionProvider } from "next-auth/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
+  const router = useRouter();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [mode, setMode] = useState("light");
 
@@ -74,8 +76,11 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
     [mode]
   );
 
-  return (
-    <SessionProvider session={session}>
+  // Lista de rutas donde no necesitas la autenticación
+  const noAuthNeeded = ["/cv/upload", "/cv/confirm"];
+
+  const content = (
+    <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>FAP Mendoza</title>
@@ -84,6 +89,14 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         <CssBaseline />
         <Component {...pageProps} toggleDarkMode={toggleDarkMode} currentMode={mode} />
       </ThemeProvider>
-    </SessionProvider>
+    </>
   );
+
+  // Si la ruta actual está en la lista, no envolvemos con SessionProvider
+  if (noAuthNeeded.includes(router.pathname)) {
+    return content;
+  }
+
+  // En el resto de las páginas, se utiliza SessionProvider
+  return <SessionProvider session={session}>{content}</SessionProvider>;
 }
