@@ -8,9 +8,12 @@ import PublicLayout from "../../components/PublicLayout";
 export default function ConfirmEmail() {
   const router = useRouter();
   const { code } = router.query;
+  const [isClient, setIsClient] = useState(false);
   const [message, setMessage] = useState("Procesando confirmación...");
 
   useEffect(() => {
+    setIsClient(true);
+
     if (code) {
       axios
         .get(`${process.env.NEXT_PUBLIC_API_URL}/cv/confirm?code=${code}`)
@@ -26,6 +29,8 @@ export default function ConfirmEmail() {
         });
     }
   }, [code]);
+
+  if (!isClient) return null; // Evita el error de prerenderizado
 
   return (
     <PublicLayout>

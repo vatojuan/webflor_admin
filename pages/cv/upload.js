@@ -1,5 +1,5 @@
 // frontend/pages/cv/upload.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Container,
@@ -14,6 +14,7 @@ import {
 import PublicLayout from "../../components/PublicLayout";
 
 export default function UploadCV() {
+  const [isClient, setIsClient] = useState(false);
   const [file, setFile] = useState(null);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -25,6 +26,12 @@ export default function UploadCV() {
     severity: "success",
     message: "",
   });
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null; // Evita el error de prerenderizado
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -107,68 +114,7 @@ export default function UploadCV() {
               {uploading ? "Subiendo..." : "Subir CV"}
             </Button>
           </Box>
-          {message && (
-            <Alert
-              severity={message.includes("Error") ? "error" : "success"}
-              sx={{ mt: 2 }}
-            >
-              {message}
-            </Alert>
-          )}
-          {extractedText && (
-            <Box sx={{ mt: 4 }}>
-              <Typography variant="h6" gutterBottom>
-                Texto extraído:
-              </Typography>
-              <Paper
-                sx={{
-                  p: 2,
-                  maxHeight: 200,
-                  overflow: "auto",
-                  backgroundColor: "background.paper",
-                }}
-              >
-                <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {extractedText}
-                </Typography>
-              </Paper>
-            </Box>
-          )}
-          {embedding && (
-            <Box sx={{ mt: 4 }}>
-              <Typography variant="h6" gutterBottom>
-                Embedding generado:
-              </Typography>
-              <Paper
-                sx={{
-                  p: 2,
-                  maxHeight: 200,
-                  overflow: "auto",
-                  backgroundColor: "background.paper",
-                }}
-              >
-                <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {JSON.stringify(embedding, null, 2)}
-                </Typography>
-              </Paper>
-            </Box>
-          )}
         </Paper>
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={4000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => setSnackbar({ ...snackbar, open: false })}
-            severity={snackbar.severity}
-            variant="filled"
-            sx={{ width: "100%" }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
       </Container>
     </PublicLayout>
   );
