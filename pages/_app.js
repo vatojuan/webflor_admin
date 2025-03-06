@@ -78,15 +78,15 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
     </>
   );
 
-  // Espera a que el router esté listo
+  // Esperamos a que el router esté listo para asegurarnos de que router.pathname tenga el valor correcto
   if (!router.isReady) return null;
 
-  // Si la ruta empieza con "/cv", no envolver con SessionProvider
+  // Si la ruta empieza con "/cv", no envolvemos con SessionProvider
   if (router.pathname.startsWith("/cv")) {
     return content;
   }
 
-  // Para el resto, envolver con SessionProvider y desactivar el refetch automático
+  // En el resto de las páginas, se utiliza SessionProvider (con refetch desactivado)
   return (
     <SessionProvider session={session} refetchInterval={0} refetchOnWindowFocus={false}>
       {content}

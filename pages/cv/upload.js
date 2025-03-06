@@ -1,3 +1,4 @@
+// frontend/pages/cv/upload.js
 import { useState } from "react";
 import axios from "axios";
 import {
@@ -10,6 +11,7 @@ import {
   Alert,
   Snackbar,
 } from "@mui/material";
+import PublicLayout from "../../components/PublicLayout";
 
 export default function UploadCV() {
   const [file, setFile] = useState(null);
@@ -73,99 +75,101 @@ export default function UploadCV() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <Paper sx={{ p: 4 }}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Subir tu CV
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
-          <Button variant="contained" component="label">
-            Seleccionar Archivo (PDF o DOCX)
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              hidden
-              onChange={handleFileChange}
-            />
-          </Button>
-          <TextField
-            label="Email (opcional)"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="ejemplo@correo.com"
-            fullWidth
-          />
-          <Button type="submit" variant="contained" color="primary" disabled={uploading}>
-            {uploading ? "Subiendo..." : "Subir CV"}
-          </Button>
-        </Box>
-        {message && (
-          <Alert
-            severity={message.includes("Error") ? "error" : "success"}
-            sx={{ mt: 2 }}
+    <PublicLayout>
+      <Container maxWidth="sm" sx={{ py: 4 }}>
+        <Paper sx={{ p: 4 }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Subir tu CV
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
-            {message}
-          </Alert>
-        )}
-        {extractedText && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              Texto extraído:
-            </Typography>
-            <Paper
-              sx={{
-                p: 2,
-                maxHeight: 200,
-                overflow: "auto",
-                backgroundColor: "background.paper",
-              }}
-            >
-              <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                {extractedText}
-              </Typography>
-            </Paper>
+            <Button variant="contained" component="label">
+              Seleccionar Archivo (PDF o DOCX)
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                hidden
+                onChange={handleFileChange}
+              />
+            </Button>
+            <TextField
+              label="Email (opcional)"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="ejemplo@correo.com"
+              fullWidth
+            />
+            <Button type="submit" variant="contained" color="primary" disabled={uploading}>
+              {uploading ? "Subiendo..." : "Subir CV"}
+            </Button>
           </Box>
-        )}
-        {embedding && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              Embedding generado:
-            </Typography>
-            <Paper
-              sx={{
-                p: 2,
-                maxHeight: 200,
-                overflow: "auto",
-                backgroundColor: "background.paper",
-              }}
+          {message && (
+            <Alert
+              severity={message.includes("Error") ? "error" : "success"}
+              sx={{ mt: 2 }}
             >
-              <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                {JSON.stringify(embedding, null, 2)}
+              {message}
+            </Alert>
+          )}
+          {extractedText && (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" gutterBottom>
+                Texto extraído:
               </Typography>
-            </Paper>
-          </Box>
-        )}
-      </Paper>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
+              <Paper
+                sx={{
+                  p: 2,
+                  maxHeight: 200,
+                  overflow: "auto",
+                  backgroundColor: "background.paper",
+                }}
+              >
+                <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+                  {extractedText}
+                </Typography>
+              </Paper>
+            </Box>
+          )}
+          {embedding && (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" gutterBottom>
+                Embedding generado:
+              </Typography>
+              <Paper
+                sx={{
+                  p: 2,
+                  maxHeight: 200,
+                  overflow: "auto",
+                  backgroundColor: "background.paper",
+                }}
+              >
+                <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+                  {JSON.stringify(embedding, null, 2)}
+                </Typography>
+              </Paper>
+            </Box>
+          )}
+        </Paper>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Container>
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </PublicLayout>
   );
 }

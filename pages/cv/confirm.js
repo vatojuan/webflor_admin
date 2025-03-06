@@ -1,7 +1,9 @@
+// frontend/pages/cv/confirm.js
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { Container, Paper, Typography } from "@mui/material";
+import PublicLayout from "../../components/PublicLayout";
 
 export default function ConfirmEmail() {
   const router = useRouter();
@@ -26,13 +28,15 @@ export default function ConfirmEmail() {
   }, [code]);
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <Paper sx={{ p: 4, textAlign: "center" }}>
-        <Typography variant="h4" gutterBottom>
-          Confirmación de Email
-        </Typography>
-        <Typography variant="body1">{message}</Typography>
-      </Paper>
-    </Container>
+    <PublicLayout>
+      <Container maxWidth="sm" sx={{ py: 4 }}>
+        <Paper sx={{ p: 4, textAlign: "center" }}>
+          <Typography variant="h4" gutterBottom>
+            Confirmación de Email
+          </Typography>
+          <Typography variant="body1">{message}</Typography>
+        </Paper>
+      </Container>
+    </PublicLayout>
   );
 }
