@@ -2,12 +2,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { SessionProvider } from "next-auth/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-export default function App({ Component, pageProps: { session, ...pageProps } }) {
+export default function App({ Component, pageProps }) {
   const router = useRouter();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [mode, setMode] = useState("light");
@@ -34,16 +33,8 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
       createTheme({
         palette: {
           mode,
-          primary: {
-            main: "#D96236",
-            dark: "#B0482B",
-          },
-          secondary: {
-            main: "#103B40",
-          },
-          accent: {
-            main: "#2F4F4F",
-          },
+          primary: { main: "#D96236", dark: "#B0482B" },
+          secondary: { main: "#103B40" },
           background: {
             default: mode === "light" ? "#F2E6CE" : "#2B1B17",
             paper: mode === "light" ? "#FFFFFF" : "#3E2723",
@@ -51,21 +42,14 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
           text: {
             primary: mode === "light" ? "#3E2723" : "#FAD9CF",
             secondary: mode === "light" ? "#5D4037" : "#D7CCC8",
-            accent: "#2F4F4F",
           },
         },
-        typography: {
-          fontFamily: "'Bodoni Moda', serif",
-          h1: { fontWeight: 700, fontSize: "2.4rem" },
-          h2: { fontWeight: 600, fontSize: "2rem" },
-          h6: { fontWeight: 500 },
-          body1: { fontSize: "1rem", lineHeight: 1.6 },
-        },
+        typography: { fontFamily: "'Bodoni Moda', serif" },
       }),
     [mode]
   );
 
-  const content = (
+  return (
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
@@ -76,20 +60,5 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         <Component {...pageProps} toggleDarkMode={toggleDarkMode} currentMode={mode} />
       </ThemeProvider>
     </>
-  );
-
-  // Esperamos a que el router esté listo para asegurarnos de que router.pathname tenga el valor correcto
-  if (!router.isReady) return null;
-
-  // Si la ruta empieza con "/cv", no envolvemos con SessionProvider
-  if (router.pathname.startsWith("/cv")) {
-    return content;
-  }
-
-  // En el resto de las páginas, se utiliza SessionProvider (con refetch desactivado)
-  return (
-    <SessionProvider session={session} refetchInterval={0} refetchOnWindowFocus={false}>
-      {content}
-    </SessionProvider>
   );
 }
